@@ -86,7 +86,7 @@ impl Display for Item {
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct GildedRose {
-    pub items: Vec<Item>,
+    items: Vec<Item>,
 }
 
 impl GildedRose {
@@ -98,6 +98,16 @@ impl GildedRose {
         for item in &mut self.items {
             item.tick();
         }
+    }
+}
+
+impl Display for GildedRose {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "name, sellIn, quality")?;
+        for item in &self.items {
+            writeln!(f, "{}", item)?;
+        }
+        Ok(())
     }
 }
 
