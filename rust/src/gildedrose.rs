@@ -100,11 +100,11 @@ impl GildedRose {
 #[cfg(test)]
 mod tests {
     use super::*;
-    const ORDINARY: &'static str = "Ordinary";
-    const AGED_BRIE: &'static str = "Aged Brie";
-    const SULFURAS: &'static str = "Sulfuras, Hand of Ragnaros";
-    const BACKSTAGE_PASS: &'static str = "Backstage passes to a TAFKAL80ETC concert";
-    const CONJURED: &'static str = "Conjured Mana Cake";
+    const ORDINARY: &str = "Ordinary";
+    const AGED_BRIE: &str = "Aged Brie";
+    const SULFURAS: &str = "Sulfuras, Hand of Ragnaros";
+    const BACKSTAGE_PASS: &str = "Backstage passes to a TAFKAL80ETC concert";
+    const CONJURED: &str = "Conjured Mana Cake";
 
     mod ordinary {
         use super::*;
