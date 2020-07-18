@@ -23,6 +23,15 @@ impl Item {
         item
     }
 
+    pub fn tick(&mut self) {
+        match self.name.as_ref() {
+            "Aged Brie" => self.brie_tick(),
+            "Sulfuras, Hand of Ragnaros" => self.sulfuras_tick(),
+            "Backstage passes to a TAFKAL80ETC concert" => self.backstage_tick(),
+            _ => self.ordinary_tick(),
+        }
+    }
+
     fn ordinary_tick(&mut self) {
         self.days_remaining -= 1;
         self.quality = self.quality.saturating_sub(1);
@@ -31,49 +40,36 @@ impl Item {
         }
     }
 
-    pub fn tick(&mut self) {
-        if self.name != "Aged Brie"
-            && self.name != "Backstage passes to a TAFKAL80ETC concert"
-            && self.name != "Sulfuras, Hand of Ragnaros"
-        {
-            self.ordinary_tick();
+    fn brie_tick(&mut self) {
+        self.days_remaining -= 1;
+        if self.quality == 50 {
             return;
         }
+        self.quality += 1;
+        if self.days_remaining < 0 && self.quality != 50 {
+            self.quality += 1;
+        }
+    }
 
-        if self.name != "Aged Brie" && self.name != "Backstage passes to a TAFKAL80ETC concert" {
-            if self.quality > 0 && self.name != "Sulfuras, Hand of Ragnaros" {
-                self.quality -= 1;
-            }
-        } else if self.quality < 50 {
+    fn sulfuras_tick(&mut self) {}
+
+    fn backstage_tick(&mut self) {
+        if self.quality < 50 {
             self.quality += 1;
 
-            if self.name == "Backstage passes to a TAFKAL80ETC concert" {
-                if self.days_remaining < 11 && self.quality < 50 {
-                    self.quality += 1;
-                }
-
-                if self.days_remaining < 6 && self.quality < 50 {
-                    self.quality += 1;
-                }
-            }
-        }
-
-        if self.name != "Sulfuras, Hand of Ragnaros" {
-            self.days_remaining -= 1;
-        }
-
-        if self.days_remaining < 0 {
-            if self.name != "Aged Brie" {
-                if self.name != "Backstage passes to a TAFKAL80ETC concert" {
-                    if self.quality > 0 && self.name != "Sulfuras, Hand of Ragnaros" {
-                        self.quality -= 1;
-                    }
-                } else {
-                    self.quality = 0;
-                }
-            } else if self.quality < 50 {
+            if self.days_remaining < 11 && self.quality < 50 {
                 self.quality += 1;
             }
+
+            if self.days_remaining < 6 && self.quality < 50 {
+                self.quality += 1;
+            }
+        }
+
+        self.days_remaining -= 1;
+
+        if self.days_remaining < 0 {
+            self.quality = 0;
         }
     }
 }
