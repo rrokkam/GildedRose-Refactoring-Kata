@@ -82,9 +82,130 @@ impl GildedRose {
 
 #[cfg(test)]
 mod tests {
+    mod normal {
+        #[test]
+        fn before_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+        #[test]
+        fn on_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+        #[test]
+        fn after_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+        #[test]
+        fn zero_quality() {
+            assert_eq!(2 + 2, 4);
+        }
+    }
 
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    mod brie {
+        mod before_sell_date {
+            #[test]
+            fn not_with_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn with_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+        }
+        mod on_sell_date {
+            #[test]
+            fn not_near_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+
+            #[test]
+            fn near_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+
+            #[test]
+            fn with_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+        }
+        mod after_sell_date {
+            #[test]
+            fn not_with_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn with_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+        }
+    }
+
+    mod sulfuras {
+        #[test]
+        fn before_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+        #[test]
+        fn on_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+        #[test]
+        fn after_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+    }
+
+    mod backstage_pass {
+        #[test]
+        fn long_before_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+
+        mod medium_close_to_sell_date {
+            #[test]
+            fn upper_bound() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn upper_bound_at_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn lower_bound() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn lower_bound_at_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+        }
+
+        mod very_close_to_sell_date {
+            #[test]
+            fn upper_bound() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn upper_bound_at_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn lower_bound() {
+                assert_eq!(2 + 2, 4);
+            }
+            #[test]
+            fn lower_bound_at_max_quality() {
+                assert_eq!(2 + 2, 4);
+            }
+        }
+
+        #[test]
+        fn on_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
+        #[test]
+        fn after_sell_date() {
+            assert_eq!(2 + 2, 4);
+        }
     }
 }
