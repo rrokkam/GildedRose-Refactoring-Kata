@@ -23,7 +23,27 @@ impl Item {
         item
     }
 
+    fn ordinary_tick(&mut self) {
+        self.quality = std::cmp::max(
+            0,
+            if self.days_remaining > 0 {
+                self.quality - 1
+            } else {
+                self.quality - 2
+            },
+        );
+        self.days_remaining -= 1;
+    }
+
     pub fn tick(&mut self) {
+        if self.name != "Aged Brie"
+            && self.name != "Backstage passes to a TAFKAL80ETC concert"
+            && self.name != "Sulfuras, Hand of Ragnaros"
+        {
+            self.ordinary_tick();
+            return;
+        }
+
         if self.name != "Aged Brie" && self.name != "Backstage passes to a TAFKAL80ETC concert" {
             if self.quality > 0 && self.name != "Sulfuras, Hand of Ragnaros" {
                 self.quality -= 1;
