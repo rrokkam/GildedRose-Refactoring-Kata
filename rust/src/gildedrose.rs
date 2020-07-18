@@ -1,6 +1,7 @@
 use std::string;
 use std::vec;
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct Item {
     pub name: string::String,
     pub sell_in: i32,
@@ -17,6 +18,7 @@ impl Item {
     }
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct GildedRose {
     pub items: vec::Vec<Item>,
 }
@@ -83,9 +85,14 @@ impl GildedRose {
 #[cfg(test)]
 mod tests {
     mod normal {
+        use crate::*;
         #[test]
         fn before_sell_date() {
-            assert_eq!(2 + 2, 4);
+            let item = Item::new("normal".to_string(), 10, 5);
+            let mut rose = GildedRose::new(vec![item]);
+            rose.update_quality();
+            assert_eq!(rose.items.len(), 1);
+            assert_eq!(rose.items[0], Item::new("normal".to_string(), 9, 4));
         }
         #[test]
         fn on_sell_date() {
