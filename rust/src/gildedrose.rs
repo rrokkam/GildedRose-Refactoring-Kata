@@ -279,4 +279,77 @@ mod tests {
             assert_eq!(Item::updated_once(PASS, -10, 50), Item::new(PASS, -11, 0));
         }
     }
+
+    mod conjured {
+        const CONJURED: &'static str = "Conjured Mana Cake";
+
+        mod before_sell_date {
+            use super::*;
+            use crate::Item;
+
+            #[test]
+            #[ignore]
+            fn not_with_zero_quality() {
+                assert_eq!(
+                    Item::updated_once(CONJURED, 10, 5),
+                    Item::new(CONJURED, 9, 3)
+                );
+            }
+
+            #[test]
+            #[ignore]
+            fn with_zero_quality() {
+                assert_eq!(
+                    Item::updated_once(CONJURED, 10, 0),
+                    Item::new(CONJURED, 9, 0)
+                );
+            }
+        }
+
+        mod on_sell_date {
+            use super::*;
+            use crate::Item;
+
+            #[test]
+            #[ignore]
+            fn not_with_zero_quality() {
+                assert_eq!(
+                    Item::updated_once(CONJURED, 0, 5),
+                    Item::new(CONJURED, -1, 1)
+                );
+            }
+
+            #[test]
+            #[ignore]
+            fn with_zero_quality() {
+                assert_eq!(
+                    Item::updated_once(CONJURED, 0, 0),
+                    Item::new(CONJURED, -1, 0)
+                );
+            }
+        }
+
+        mod after_sell_date {
+            use super::*;
+            use crate::Item;
+
+            #[test]
+            #[ignore]
+            fn not_with_zero_quality() {
+                assert_eq!(
+                    Item::updated_once(CONJURED, -10, 5),
+                    Item::new(CONJURED, -11, 1)
+                );
+            }
+
+            #[test]
+            #[ignore]
+            fn with_zero_quality() {
+                assert_eq!(
+                    Item::updated_once(CONJURED, -10, 0),
+                    Item::new(CONJURED, -11, 0)
+                );
+            }
+        }
+    }
 }
