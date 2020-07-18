@@ -100,10 +100,14 @@ impl GildedRose {
 #[cfg(test)]
 mod tests {
     use super::*;
+    const NORMAL: &'static str = "Normal";
+    const BRIE: &'static str = "Aged Brie";
+    const SULFURAS: &'static str = "Sulfuras, Hand of Ragnaros";
+    const PASS: &'static str = "Backstage passes to a TAFKAL80ETC concert";
+    const CONJURED: &'static str = "Conjured Mana Cake";
 
     mod normal {
-        use crate::Item;
-        const NORMAL: &'static str = "Normal";
+        use super::*;
 
         #[test]
         fn before_sell_date() {
@@ -130,11 +134,10 @@ mod tests {
     }
 
     mod brie {
-        const BRIE: &'static str = "Aged Brie";
+        use super::*;
 
         mod before_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             fn not_with_max_quality() {
@@ -149,7 +152,6 @@ mod tests {
 
         mod on_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             fn not_near_max_quality() {
@@ -169,7 +171,6 @@ mod tests {
 
         mod after_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             fn not_with_max_quality() {
@@ -184,8 +185,7 @@ mod tests {
     }
 
     mod sulfuras {
-        use crate::Item;
-        const SULFURAS: &'static str = "Sulfuras, Hand of Ragnaros";
+        use super::*;
 
         #[test]
         fn before_sell_date() {
@@ -213,8 +213,7 @@ mod tests {
     }
 
     mod backstage_pass {
-        use crate::Item;
-        const PASS: &'static str = "Backstage passes to a TAFKAL80ETC concert";
+        use super::*;
 
         #[test]
         fn long_before_sell_date() {
@@ -223,7 +222,6 @@ mod tests {
 
         mod medium_close_to_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             fn upper_bound() {
@@ -248,7 +246,6 @@ mod tests {
 
         mod very_close_to_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             fn upper_bound() {
@@ -283,11 +280,10 @@ mod tests {
     }
 
     mod conjured {
-        const CONJURED: &'static str = "Conjured Mana Cake";
+        use super::*;
 
         mod before_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             #[ignore]
@@ -310,7 +306,6 @@ mod tests {
 
         mod on_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             #[ignore]
@@ -333,7 +328,6 @@ mod tests {
 
         mod after_sell_date {
             use super::*;
-            use crate::Item;
 
             #[test]
             #[ignore]
