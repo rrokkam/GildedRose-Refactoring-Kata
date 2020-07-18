@@ -25,7 +25,7 @@ fn main() {
             49,
         ),
         // this conjured item does not work properly yet
-        Item::new(String::from("Conjured Mana Cake"), 3, 6),
+//        Item::new(String::from("Conjured Mana Cake"), 3, 6),
     ];
     let mut rose = GildedRose::new(items);
 
