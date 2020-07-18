@@ -64,7 +64,11 @@ impl Item {
 
 impl Display for Item {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}, {}, {}", self.name, self.days_remaining, self.quality)
+        write!(
+            f,
+            "{}, {}, {}",
+            self.name, self.days_remaining, self.quality
+        )
     }
 }
 
