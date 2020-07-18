@@ -3,22 +3,22 @@ use std::fmt::{self, Display};
 #[derive(Debug, PartialEq, Eq)]
 pub struct Item {
     name: String,
-    sell_in: i32,
+    days_remaining: i32,
     quality: i32,
 }
 
 impl Item {
-    pub fn new(name: impl AsRef<str>, sell_in: i32, quality: i32) -> Item {
+    pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: i32) -> Item {
         Item {
             name: name.as_ref().to_string(),
-            sell_in,
+            days_remaining,
             quality,
         }
     }
 
     #[cfg(test)]
-    fn ticked_once(name: impl AsRef<str>, sell_in: i32, quality: i32) -> Item {
-        let mut item = Item::new(name, sell_in, quality);
+    fn ticked_once(name: impl AsRef<str>, days_remaining: i32, quality: i32) -> Item {
+        let mut item = Item::new(name, days_remaining, quality);
         item.tick();
         item
     }
@@ -32,21 +32,21 @@ impl Item {
             self.quality += 1;
 
             if self.name == "Backstage passes to a TAFKAL80ETC concert" {
-                if self.sell_in < 11 && self.quality < 50 {
+                if self.days_remaining < 11 && self.quality < 50 {
                     self.quality += 1;
                 }
 
-                if self.sell_in < 6 && self.quality < 50 {
+                if self.days_remaining < 6 && self.quality < 50 {
                     self.quality += 1;
                 }
             }
         }
 
         if self.name != "Sulfuras, Hand of Ragnaros" {
-            self.sell_in -= 1;
+            self.days_remaining -= 1;
         }
 
-        if self.sell_in < 0 {
+        if self.days_remaining < 0 {
             if self.name != "Aged Brie" {
                 if self.name != "Backstage passes to a TAFKAL80ETC concert" {
                     if self.quality > 0 && self.name != "Sulfuras, Hand of Ragnaros" {
@@ -64,7 +64,7 @@ impl Item {
 
 impl Display for Item {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}, {}, {}", self.name, self.sell_in, self.quality)
+        write!(f, "{}, {}, {}", self.name, self.days_remaining, self.quality)
     }
 }
 
