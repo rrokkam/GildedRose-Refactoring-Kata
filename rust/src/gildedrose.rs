@@ -1,11 +1,10 @@
-use std::string;
-use std::vec;
+use std::fmt::{self, Display};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Item {
-    pub name: string::String,
-    pub sell_in: i32,
-    pub quality: i32,
+    name: String,
+    sell_in: i32,
+    quality: i32,
 }
 
 impl Item {
@@ -68,13 +67,19 @@ impl Item {
     }
 }
 
+impl Display for Item {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}, {}, {}", self.name, self.sell_in, self.quality)
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct GildedRose {
-    pub items: vec::Vec<Item>,
+    pub items: Vec<Item>,
 }
 
 impl GildedRose {
-    pub fn new(items: vec::Vec<Item>) -> GildedRose {
+    pub fn new(items: Vec<Item>) -> GildedRose {
         GildedRose { items: items }
     }
 
