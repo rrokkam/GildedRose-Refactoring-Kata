@@ -100,36 +100,45 @@ impl GildedRose {
 #[cfg(test)]
 mod tests {
     use super::*;
-    const NORMAL: &'static str = "Normal";
-    const BRIE: &'static str = "Aged Brie";
+    const ORDINARY: &'static str = "Ordinary";
+    const AGED_BRIE: &'static str = "Aged Brie";
     const SULFURAS: &'static str = "Sulfuras, Hand of Ragnaros";
-    const PASS: &'static str = "Backstage passes to a TAFKAL80ETC concert";
+    const BACKSTAGE_PASS: &'static str = "Backstage passes to a TAFKAL80ETC concert";
     const CONJURED: &'static str = "Conjured Mana Cake";
 
-    mod normal {
+    mod ordinary {
         use super::*;
 
         #[test]
         fn before_sell_date() {
-            assert_eq!(Item::updated_once(NORMAL, 10, 5), Item::new(NORMAL, 9, 4));
+            assert_eq!(
+                Item::updated_once(ORDINARY, 10, 5),
+                Item::new(ORDINARY, 9, 4)
+            );
         }
 
         #[test]
         fn on_sell_date() {
-            assert_eq!(Item::updated_once(NORMAL, 0, 5), Item::new(NORMAL, -1, 3));
+            assert_eq!(
+                Item::updated_once(ORDINARY, 0, 5),
+                Item::new(ORDINARY, -1, 3)
+            );
         }
 
         #[test]
         fn after_sell_date() {
             assert_eq!(
-                Item::updated_once(NORMAL, -10, 5),
-                Item::new(NORMAL, -11, 3)
+                Item::updated_once(ORDINARY, -10, 5),
+                Item::new(ORDINARY, -10, 3)
             );
         }
 
         #[test]
         fn zero_quality() {
-            assert_eq!(Item::updated_once(NORMAL, 10, 0), Item::new(NORMAL, 9, 0));
+            assert_eq!(
+                Item::updated_once(ORDINARY, 10, 0),
+                Item::new(ORDINARY, 9, 0)
+            );
         }
     }
 
@@ -141,12 +150,18 @@ mod tests {
 
             #[test]
             fn not_with_max_quality() {
-                assert_eq!(Item::updated_once(BRIE, 10, 5), Item::new(BRIE, 9, 6));
+                assert_eq!(
+                    Item::updated_once(AGED_BRIE, 10, 5),
+                    Item::new(AGED_BRIE, 9, 6)
+                );
             }
 
             #[test]
             fn with_max_quality() {
-                assert_eq!(Item::updated_once(BRIE, 10, 50), Item::new(BRIE, 9, 50));
+                assert_eq!(
+                    Item::updated_once(AGED_BRIE, 10, 50),
+                    Item::new(AGED_BRIE, 9, 50)
+                );
             }
         }
 
@@ -155,17 +170,26 @@ mod tests {
 
             #[test]
             fn not_near_max_quality() {
-                assert_eq!(Item::updated_once(BRIE, 0, 5), Item::new(BRIE, -1, 7));
+                assert_eq!(
+                    Item::updated_once(AGED_BRIE, 0, 5),
+                    Item::new(AGED_BRIE, -1, 7)
+                );
             }
 
             #[test]
             fn near_max_quality() {
-                assert_eq!(Item::updated_once(BRIE, 0, 49), Item::new(BRIE, -1, 50));
+                assert_eq!(
+                    Item::updated_once(AGED_BRIE, 0, 49),
+                    Item::new(AGED_BRIE, -1, 50)
+                );
             }
 
             #[test]
             fn with_max_quality() {
-                assert_eq!(Item::updated_once(BRIE, 0, 50), Item::new(BRIE, -1, 50));
+                assert_eq!(
+                    Item::updated_once(AGED_BRIE, 0, 50),
+                    Item::new(AGED_BRIE, -1, 50)
+                );
             }
         }
 
@@ -174,12 +198,18 @@ mod tests {
 
             #[test]
             fn not_with_max_quality() {
-                assert_eq!(Item::updated_once(BRIE, -10, 50), Item::new(BRIE, -11, 50));
+                assert_eq!(
+                    Item::updated_once(AGED_BRIE, -10, 50),
+                    Item::new(AGED_BRIE, -11, 50)
+                );
             }
 
             #[test]
             fn with_max_quality() {
-                assert_eq!(Item::updated_once(BRIE, -10, 50), Item::new(BRIE, -11, 50));
+                assert_eq!(
+                    Item::updated_once(AGED_BRIE, -10, 50),
+                    Item::new(AGED_BRIE, -11, 50)
+                );
             }
         }
     }
@@ -217,7 +247,10 @@ mod tests {
 
         #[test]
         fn long_before_sell_date() {
-            assert_eq!(Item::updated_once(PASS, 11, 5), Item::new(PASS, 10, 6));
+            assert_eq!(
+                Item::updated_once(BACKSTAGE_PASS, 11, 5),
+                Item::new(BACKSTAGE_PASS, 10, 6)
+            );
         }
 
         mod medium_close_to_sell_date {
@@ -225,22 +258,34 @@ mod tests {
 
             #[test]
             fn upper_bound() {
-                assert_eq!(Item::updated_once(PASS, 10, 5), Item::new(PASS, 9, 7));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 10, 5),
+                    Item::new(BACKSTAGE_PASS, 9, 7)
+                );
             }
 
             #[test]
             fn upper_bound_at_max_quality() {
-                assert_eq!(Item::updated_once(PASS, 10, 50), Item::new(PASS, 9, 50));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 10, 50),
+                    Item::new(BACKSTAGE_PASS, 9, 50)
+                );
             }
 
             #[test]
             fn lower_bound() {
-                assert_eq!(Item::updated_once(PASS, 6, 5), Item::new(PASS, 5, 7));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 6, 5),
+                    Item::new(BACKSTAGE_PASS, 5, 7)
+                );
             }
 
             #[test]
             fn lower_bound_at_max_quality() {
-                assert_eq!(Item::updated_once(PASS, 6, 50), Item::new(PASS, 5, 50));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 6, 50),
+                    Item::new(BACKSTAGE_PASS, 5, 50)
+                );
             }
         }
 
@@ -249,33 +294,51 @@ mod tests {
 
             #[test]
             fn upper_bound() {
-                assert_eq!(Item::updated_once(PASS, 5, 5), Item::new(PASS, 4, 8));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 5, 5),
+                    Item::new(BACKSTAGE_PASS, 4, 8)
+                );
             }
 
             #[test]
             fn upper_bound_at_max_quality() {
-                assert_eq!(Item::updated_once(PASS, 5, 50), Item::new(PASS, 4, 50));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 5, 50),
+                    Item::new(BACKSTAGE_PASS, 4, 50)
+                );
             }
 
             #[test]
             fn lower_bound() {
-                assert_eq!(Item::updated_once(PASS, 1, 5), Item::new(PASS, 0, 8));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 1, 5),
+                    Item::new(BACKSTAGE_PASS, 0, 8)
+                );
             }
 
             #[test]
             fn lower_bound_at_max_quality() {
-                assert_eq!(Item::updated_once(PASS, 1, 50), Item::new(PASS, 0, 50));
+                assert_eq!(
+                    Item::updated_once(BACKSTAGE_PASS, 1, 50),
+                    Item::new(BACKSTAGE_PASS, 0, 50)
+                );
             }
         }
 
         #[test]
         fn on_sell_date() {
-            assert_eq!(Item::updated_once(PASS, 0, 5), Item::new(PASS, -1, 0));
+            assert_eq!(
+                Item::updated_once(BACKSTAGE_PASS, 0, 5),
+                Item::new(BACKSTAGE_PASS, -1, 0)
+            );
         }
 
         #[test]
         fn after_sell_date() {
-            assert_eq!(Item::updated_once(PASS, -10, 50), Item::new(PASS, -11, 0));
+            assert_eq!(
+                Item::updated_once(BACKSTAGE_PASS, -10, 50),
+                Item::new(BACKSTAGE_PASS, -11, 0)
+            );
         }
     }
 
@@ -352,7 +415,7 @@ mod tests {
     #[test]
     fn several_items() {
         let mut rose = GildedRose::new(vec![
-            Item::new("a normal item", 5, 10),
+            Item::new("a ordinary item", 5, 10),
             Item::new("Aged Brie", 3, 10),
         ]);
         rose.update_quality();
@@ -360,7 +423,7 @@ mod tests {
         assert_eq!(
             rose.items,
             vec![
-                Item::new("a normal item", 4, 9),
+                Item::new("a ordinary item", 4, 9),
                 Item::new("Aged Brie", 2, 11)
             ]
         );
