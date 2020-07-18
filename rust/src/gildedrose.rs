@@ -7,6 +7,38 @@ trait Tick {
     fn quality(&self) -> u32;
 }
 
+impl Display for dyn Tick {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}, {}, {}",
+            self.name(),
+            self.days_remaining(),
+            self.quality()
+        )
+    }
+}
+
+impl Debug for dyn Tick {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+        f.debug_struct("Item")
+            .field("name", &self.name())
+            .field("days_remaining", &self.days_remaining())
+            .field("quality", &self.quality())
+            .finish()
+    }
+}
+
+impl PartialEq for dyn Tick {
+    fn eq(&self, other: &dyn Tick) -> bool {
+        self.name() == other.name()
+            && self.days_remaining() == other.days_remaining()
+            && self.quality() == other.quality()
+    }
+}
+
+impl Eq for dyn Tick {}
+
 struct Ordinary {
     name: String,
     days_remaining: i32,
@@ -48,52 +80,25 @@ pub struct Item {
     item: Option<Box<dyn Tick>>,
 }
 
-impl Debug for Item {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
-        if let Some(inner) = &self.item {
-            f.debug_struct("Item")
-                .field("name", &inner.name())
-                .field("days_remaining", &inner.days_remaining())
-                .field("quality", &inner.quality())
-                .finish()
-        } else {
-            f.debug_struct("Item")
-                .field("name", &self.name)
-                .field("days_remaining", &self.days_remaining)
-                .field("quality", &self.quality)
-                .finish()
+impl Tick for Item {
+    fn tick(&mut self) {
+        match self.name.as_ref() {
+            "Aged Brie" => self.brie_tick(),
+            "Sulfuras, Hand of Ragnaros" => self.sulfuras_tick(),
+            "Backstage passes to a TAFKAL80ETC concert" => self.backstage_tick(),
+            _ => self.ordinary_tick(),
         }
     }
-}
-
-impl PartialEq for Item {
-    fn eq(&self, other: &Item) -> bool {
-        match (&self.item, &other.item) {
-            (None, None) => {
-                self.name == other.name
-                    && self.days_remaining == other.days_remaining
-                    && self.quality == other.quality
-            }
-            (Some(me), None) => {
-                me.name() == other.name
-                    && me.days_remaining() == other.days_remaining
-                    && me.quality() == other.quality
-            }
-            (None, Some(you)) => {
-                self.name == you.name()
-                    && self.days_remaining == you.days_remaining()
-                    && self.quality == you.quality()
-            }
-            (Some(me), Some(you)) => {
-                me.name() == you.name()
-                    && me.days_remaining() == you.days_remaining()
-                    && me.quality() == you.quality()
-            }
-        }
+    fn name(&self) -> String {
+        self.name.clone()
+    }
+    fn days_remaining(&self) -> i32 {
+        self.days_remaining
+    }
+    fn quality(&self) -> u32 {
+        self.quality
     }
 }
-
-impl Eq for Item {}
 
 impl Item {
     pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Item {
@@ -123,15 +128,6 @@ impl Item {
         let mut item = Item::new(name, days_remaining, quality);
         item.tick();
         item
-    }
-
-    pub fn tick(&mut self) {
-        match self.name.as_ref() {
-            "Aged Brie" => self.brie_tick(),
-            "Sulfuras, Hand of Ragnaros" => self.sulfuras_tick(),
-            "Backstage passes to a TAFKAL80ETC concert" => self.backstage_tick(),
-            _ => self.ordinary_tick(),
-        }
     }
 
     fn ordinary_tick(&mut self) {
@@ -172,27 +168,6 @@ impl Item {
     }
 }
 
-impl Display for Item {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if let Some(inner) = &self.item {
-            write!(
-                f,
-                "{}, {}, {}",
-                inner.name(),
-                inner.days_remaining(),
-                inner.quality()
-            )
-        } else {
-            write!(
-                f,
-                "{}, {}, {}",
-                self.name, self.days_remaining, self.quality
-            )
-        }
-    }
-}
-
-#[derive(Debug, PartialEq, Eq)]
 pub struct GildedRose {
     items: Vec<Item>,
 }
