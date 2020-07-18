@@ -4,11 +4,11 @@ use std::fmt::{self, Display};
 pub struct Item {
     name: String,
     days_remaining: i32,
-    quality: i32,
+    quality: u32,
 }
 
 impl Item {
-    pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: i32) -> Item {
+    pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Item {
         Item {
             name: name.as_ref().to_string(),
             days_remaining,
@@ -17,22 +17,18 @@ impl Item {
     }
 
     #[cfg(test)]
-    fn ticked_once(name: impl AsRef<str>, days_remaining: i32, quality: i32) -> Item {
+    fn ticked_once(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Item {
         let mut item = Item::new(name, days_remaining, quality);
         item.tick();
         item
     }
 
     fn ordinary_tick(&mut self) {
-        self.quality = std::cmp::max(
-            0,
-            if self.days_remaining > 0 {
-                self.quality - 1
-            } else {
-                self.quality - 2
-            },
-        );
         self.days_remaining -= 1;
+        self.quality = self.quality.saturating_sub(1);
+        if self.days_remaining < 0 {
+            self.quality = self.quality.saturating_sub(1);
+        }
     }
 
     pub fn tick(&mut self) {
