@@ -99,6 +99,8 @@ impl GildedRose {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     mod normal {
         use crate::Item;
         const NORMAL: &'static str = "Normal";
@@ -351,5 +353,22 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn several_items() {
+        let mut rose = GildedRose::new(vec![
+            Item::new("a normal item", 5, 10),
+            Item::new("Aged Brie", 3, 10),
+        ]);
+        rose.update_quality();
+
+        assert_eq!(
+            rose.items,
+            vec![
+                Item::new("a normal item", 4, 9),
+                Item::new("Aged Brie", 2, 11)
+            ]
+        );
     }
 }
