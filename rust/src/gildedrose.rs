@@ -129,7 +129,7 @@ mod tests {
         fn after_sell_date() {
             assert_eq!(
                 Item::updated_once(ORDINARY, -10, 5),
-                Item::new(ORDINARY, -10, 3)
+                Item::new(ORDINARY, -11, 3)
             );
         }
 
