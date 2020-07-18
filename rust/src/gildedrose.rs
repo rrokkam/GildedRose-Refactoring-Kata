@@ -207,8 +207,8 @@ mod tests {
             #[test]
             fn not_with_max_quality() {
                 assert_eq!(
-                    Item::ticked_once(AGED_BRIE, -10, 50),
-                    Item::new(AGED_BRIE, -11, 50)
+                    Item::ticked_once(AGED_BRIE, -10, 5),
+                    Item::new(AGED_BRIE, -11, 7)
                 );
             }
 
