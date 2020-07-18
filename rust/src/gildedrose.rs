@@ -91,11 +91,9 @@ mod tests {
         use crate::*;
         #[test]
         fn before_sell_date() {
-            let item = Item::new("normal".to_string(), 10, 5);
-            let mut rose = GildedRose::new(vec![item]);
-            rose.update_quality();
-            assert_eq!(rose.items.len(), 1);
-            assert_eq!(rose.items[0], Item::new("normal".to_string(), 9, 4));
+            let mut item = Item::new("normal".to_string(), 10, 5);
+            item.update_quality();
+            assert_eq!(item, Item::new("normal".to_string(), 9, 4));
         }
         #[test]
         fn on_sell_date() {
