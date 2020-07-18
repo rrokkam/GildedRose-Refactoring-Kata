@@ -11,8 +11,8 @@ impl Item {
     pub fn new(name: impl AsRef<str>, sell_in: i32, quality: i32) -> Item {
         Item {
             name: name.as_ref().to_string(),
-            sell_in: sell_in,
-            quality: quality,
+            sell_in,
+            quality,
         }
     }
 
@@ -25,50 +25,38 @@ impl Item {
 
     pub fn update_quality(&mut self) {
         if self.name != "Aged Brie" && self.name != "Backstage passes to a TAFKAL80ETC concert" {
-            if self.quality > 0 {
-                if self.name != "Sulfuras, Hand of Ragnaros" {
-                    self.quality = self.quality - 1;
-                }
+            if self.quality > 0 && self.name != "Sulfuras, Hand of Ragnaros" {
+                self.quality -= 1;
             }
-        } else {
-            if self.quality < 50 {
-                self.quality = self.quality + 1;
+        } else if self.quality < 50 {
+            self.quality += 1;
 
-                if self.name == "Backstage passes to a TAFKAL80ETC concert" {
-                    if self.sell_in < 11 {
-                        if self.quality < 50 {
-                            self.quality = self.quality + 1;
-                        }
-                    }
+            if self.name == "Backstage passes to a TAFKAL80ETC concert" {
+                if self.sell_in < 11 && self.quality < 50 {
+                    self.quality += 1;
+                }
 
-                    if self.sell_in < 6 {
-                        if self.quality < 50 {
-                            self.quality = self.quality + 1;
-                        }
-                    }
+                if self.sell_in < 6 && self.quality < 50 {
+                    self.quality += 1;
                 }
             }
         }
 
         if self.name != "Sulfuras, Hand of Ragnaros" {
-            self.sell_in = self.sell_in - 1;
+            self.sell_in -= 1;
         }
 
         if self.sell_in < 0 {
             if self.name != "Aged Brie" {
                 if self.name != "Backstage passes to a TAFKAL80ETC concert" {
-                    if self.quality > 0 {
-                        if self.name != "Sulfuras, Hand of Ragnaros" {
-                            self.quality = self.quality - 1;
-                        }
+                    if self.quality > 0 && self.name != "Sulfuras, Hand of Ragnaros" {
+                        self.quality -= 1;
                     }
                 } else {
-                    self.quality = self.quality - self.quality;
+                    self.quality = 0;
                 }
-            } else {
-                if self.quality < 50 {
-                    self.quality = self.quality + 1;
-                }
+            } else if self.quality < 50 {
+                self.quality += 1;
             }
         }
     }
@@ -87,7 +75,7 @@ pub struct GildedRose {
 
 impl GildedRose {
     pub fn new(items: Vec<Item>) -> GildedRose {
-        GildedRose { items: items }
+        GildedRose { items }
     }
 
     pub fn update_quality(&mut self) {
