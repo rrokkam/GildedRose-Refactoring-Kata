@@ -24,6 +24,6 @@ fn main() {
             println!("{}", item);
         }
         println!();
-        rose.update_quality();
+        rose.tick();
     }
 }
