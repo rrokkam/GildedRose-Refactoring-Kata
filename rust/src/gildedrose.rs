@@ -119,6 +119,32 @@ impl Tick for Ordinary {
     }
 }
 
+#[derive(Constructor, Debug, PartialEq, Eq)]
+pub struct Conjured {
+    name: String,
+    days_remaining: i32,
+    quality: u32,
+}
+
+impl Tick for Conjured {
+    fn tick(&mut self) {
+        self.days_remaining -= 1;
+        self.quality = self.quality.saturating_sub(2);
+        if self.days_remaining <= 0 {
+            self.quality = self.quality.saturating_sub(2);
+        }
+    }
+    fn name(&self) -> String {
+        self.name.clone()
+    }
+    fn days_remaining(&self) -> i32 {
+        self.days_remaining
+    }
+    fn quality(&self) -> u32 {
+        self.quality
+    }
+}
+
 #[enum_dispatch(Tick)]
 #[derive(Debug, PartialEq, Eq)]
 pub enum Item {
@@ -126,6 +152,7 @@ pub enum Item {
     Backstage,
     Sulfuras,
     Ordinary,
+    Conjured,
 }
 
 impl Item {
@@ -136,6 +163,9 @@ impl Item {
                 Backstage::new(days_remaining, quality).into()
             }
             "Sulfuras, Hand of Ragnaros" => Sulfuras::new(days_remaining, quality).into(),
+            name if name.starts_with("Conjured") => {
+                Conjured::new(name.to_string(), days_remaining, quality).into()
+            }
             name => Ordinary::new(name.to_string(), days_remaining, quality).into(),
         }
     }
@@ -432,7 +462,6 @@ mod tests {
             use super::*;
 
             #[test]
-            #[ignore]
             fn not_with_zero_quality() {
                 assert_eq!(
                     Item::ticked_once(CONJURED, 10, 5),
@@ -441,7 +470,6 @@ mod tests {
             }
 
             #[test]
-            #[ignore]
             fn with_zero_quality() {
                 assert_eq!(
                     Item::ticked_once(CONJURED, 10, 0),
@@ -454,7 +482,6 @@ mod tests {
             use super::*;
 
             #[test]
-            #[ignore]
             fn not_with_zero_quality() {
                 assert_eq!(
                     Item::ticked_once(CONJURED, 0, 5),
@@ -463,7 +490,6 @@ mod tests {
             }
 
             #[test]
-            #[ignore]
             fn with_zero_quality() {
                 assert_eq!(
                     Item::ticked_once(CONJURED, 0, 0),
@@ -476,7 +502,6 @@ mod tests {
             use super::*;
 
             #[test]
-            #[ignore]
             fn not_with_zero_quality() {
                 assert_eq!(
                     Item::ticked_once(CONJURED, -10, 5),
@@ -485,7 +510,6 @@ mod tests {
             }
 
             #[test]
-            #[ignore]
             fn with_zero_quality() {
                 assert_eq!(
                     Item::ticked_once(CONJURED, -10, 0),
