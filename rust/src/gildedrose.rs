@@ -160,16 +160,12 @@ impl Display for Item {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Constructor, Debug, PartialEq, Eq)]
 pub struct GildedRose {
     items: Vec<Item>,
 }
 
 impl GildedRose {
-    pub fn new(items: Vec<Item>) -> GildedRose {
-        GildedRose { items }
-    }
-
     pub fn tick(&mut self) {
         for item in &mut self.items {
             item.tick();
