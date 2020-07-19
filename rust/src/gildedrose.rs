@@ -1,46 +1,20 @@
 use std::fmt::{self, Display};
 
+trait Tick {
+    fn tick(&mut self);
+    fn name(&self) -> String;
+    fn days_remaining(&self) -> i32;
+    fn quality(&self) -> u32;
+}
+
 #[derive(Debug, PartialEq, Eq)]
-pub struct Item {
-    name: String,
+pub struct Brie {
     days_remaining: i32,
     quality: u32,
 }
 
-impl Item {
-    pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Item {
-        Item {
-            name: name.as_ref().to_string(),
-            days_remaining,
-            quality,
-        }
-    }
-
-    #[cfg(test)]
-    fn ticked_once(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Item {
-        let mut item = Item::new(name, days_remaining, quality);
-        item.tick();
-        item
-    }
-
-    pub fn tick(&mut self) {
-        match self.name.as_ref() {
-            "Aged Brie" => self.brie_tick(),
-            "Sulfuras, Hand of Ragnaros" => self.sulfuras_tick(),
-            "Backstage passes to a TAFKAL80ETC concert" => self.backstage_tick(),
-            _ => self.ordinary_tick(),
-        }
-    }
-
-    fn ordinary_tick(&mut self) {
-        self.days_remaining -= 1;
-        self.quality = self.quality.saturating_sub(1);
-        if self.days_remaining < 0 {
-            self.quality = self.quality.saturating_sub(1);
-        }
-    }
-
-    fn brie_tick(&mut self) {
+impl Tick for Brie {
+    fn tick(&mut self) {
         self.days_remaining -= 1;
         if self.quality == 50 {
             return;
@@ -50,10 +24,25 @@ impl Item {
             self.quality += 1;
         }
     }
+    fn name(&self) -> String {
+        "Aged Brie".to_string()
+    }
+    fn days_remaining(&self) -> i32 {
+        self.days_remaining
+    }
+    fn quality(&self) -> u32 {
+        self.quality
+    }
+}
 
-    fn sulfuras_tick(&mut self) {}
+#[derive(Debug, PartialEq, Eq)]
+pub struct Backstage {
+    days_remaining: i32,
+    quality: u32,
+}
 
-    fn backstage_tick(&mut self) {
+impl Tick for Backstage {
+    fn tick(&mut self) {
         self.days_remaining -= 1;
         if self.days_remaining < 0 {
             self.quality = 0;
@@ -72,6 +61,137 @@ impl Item {
             self.quality += 1
         }
     }
+    fn name(&self) -> String {
+        "Backstage passes to a TAFKAL80ETC concert".to_string()
+    }
+    fn days_remaining(&self) -> i32 {
+        self.days_remaining
+    }
+    fn quality(&self) -> u32 {
+        self.quality
+    }
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct Sulfuras {
+    days_remaining: i32,
+    quality: u32,
+}
+
+impl Tick for Sulfuras {
+    fn tick(&mut self) {}
+    fn name(&self) -> String {
+        "Sulfuras, Hand of Ragnaros".to_string()
+    }
+    fn days_remaining(&self) -> i32 {
+        self.days_remaining
+    }
+    fn quality(&self) -> u32 {
+        self.quality
+    }
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct Ordinary {
+    name: String,
+    days_remaining: i32,
+    quality: u32,
+}
+
+impl Tick for Ordinary {
+    fn tick(&mut self) {
+        self.days_remaining -= 1;
+        self.quality = self.quality.saturating_sub(1);
+        if self.days_remaining < 0 {
+            self.quality = self.quality.saturating_sub(1);
+        }
+    }
+    fn name(&self) -> String {
+        self.name.clone()
+    }
+    fn days_remaining(&self) -> i32 {
+        self.days_remaining
+    }
+    fn quality(&self) -> u32 {
+        self.quality
+    }
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Item {
+    Brie(Brie),
+    Backstage(Backstage),
+    Sulfuras(Sulfuras),
+    Ordinary(Ordinary),
+}
+
+impl Item {
+    pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Self {
+        match name.as_ref() {
+            "Aged Brie" => Self::Brie(Brie {
+                days_remaining,
+                quality,
+            }),
+            "Backstage passes to a TAFKAL80ETC concert" => Self::Backstage(Backstage {
+                days_remaining,
+                quality,
+            }),
+            "Sulfuras, Hand of Ragnaros" => Self::Sulfuras(Sulfuras {
+                days_remaining,
+                quality,
+            }),
+            _ => Self::Ordinary(Ordinary {
+                name: name.as_ref().to_string(),
+                days_remaining,
+                quality,
+            }),
+        }
+    }
+
+    #[cfg(test)]
+    pub fn ticked_once(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Self {
+        let mut item = Item::new(name, days_remaining, quality);
+        item.tick();
+        item
+    }
+}
+
+impl Tick for Item {
+    fn tick(&mut self) {
+        match self {
+            Self::Brie(item) => item.tick(),
+            Self::Backstage(item) => item.tick(),
+            Self::Sulfuras(item) => item.tick(),
+            Self::Ordinary(item) => item.tick(),
+        }
+    }
+
+    fn name(&self) -> String {
+        match self {
+            Self::Brie(item) => item.name(),
+            Self::Backstage(item) => item.name(),
+            Self::Sulfuras(item) => item.name(),
+            Self::Ordinary(item) => item.name(),
+        }
+    }
+
+    fn days_remaining(&self) -> i32 {
+        match self {
+            Self::Brie(item) => item.days_remaining(),
+            Self::Backstage(item) => item.days_remaining(),
+            Self::Sulfuras(item) => item.days_remaining(),
+            Self::Ordinary(item) => item.days_remaining(),
+        }
+    }
+
+    fn quality(&self) -> u32 {
+        match self {
+            Self::Brie(item) => item.quality(),
+            Self::Backstage(item) => item.quality(),
+            Self::Sulfuras(item) => item.quality(),
+            Self::Ordinary(item) => item.quality(),
+        }
+    }
 }
 
 impl Display for Item {
@@ -79,7 +199,9 @@ impl Display for Item {
         write!(
             f,
             "{}, {}, {}",
-            self.name, self.days_remaining, self.quality
+            self.name(),
+            self.days_remaining(),
+            self.quality()
         )
     }
 }
