@@ -1,3 +1,4 @@
+use derive_more::Constructor;
 use enum_dispatch::enum_dispatch;
 use std::fmt::{self, Display};
 
@@ -8,8 +9,7 @@ trait Tick {
     fn days_remaining(&self) -> i32;
     fn quality(&self) -> u32;
 }
-
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Constructor, Debug, PartialEq, Eq)]
 pub struct Brie {
     days_remaining: i32,
     quality: u32,
@@ -37,7 +37,7 @@ impl Tick for Brie {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Constructor, Debug, PartialEq, Eq)]
 pub struct Backstage {
     days_remaining: i32,
     quality: u32,
@@ -74,7 +74,7 @@ impl Tick for Backstage {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Constructor, Debug, PartialEq, Eq)]
 pub struct Sulfuras {
     days_remaining: i32,
     quality: u32,
@@ -93,7 +93,7 @@ impl Tick for Sulfuras {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Constructor, Debug, PartialEq, Eq)]
 pub struct Ordinary {
     name: String,
     days_remaining: i32,
@@ -131,27 +131,12 @@ pub enum Item {
 impl Item {
     pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Self {
         match name.as_ref() {
-            "Aged Brie" => Brie {
-                days_remaining,
-                quality,
+            "Aged Brie" => Brie::new(days_remaining, quality).into(),
+            "Backstage passes to a TAFKAL80ETC concert" => {
+                Backstage::new(days_remaining, quality).into()
             }
-            .into(),
-            "Backstage passes to a TAFKAL80ETC concert" => Backstage {
-                days_remaining,
-                quality,
-            }
-            .into(),
-            "Sulfuras, Hand of Ragnaros" => Sulfuras {
-                days_remaining,
-                quality,
-            }
-            .into(),
-            _ => Ordinary {
-                name: name.as_ref().to_string(),
-                days_remaining,
-                quality,
-            }
-            .into(),
+            "Sulfuras, Hand of Ragnaros" => Sulfuras::new(days_remaining, quality).into(),
+            name => Ordinary::new(name.to_string(), days_remaining, quality).into(),
         }
     }
 
