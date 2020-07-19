@@ -1,5 +1,7 @@
+use enum_dispatch::enum_dispatch;
 use std::fmt::{self, Display};
 
+#[enum_dispatch]
 trait Tick {
     fn tick(&mut self);
     fn name(&self) -> String;
@@ -117,34 +119,39 @@ impl Tick for Ordinary {
     }
 }
 
+#[enum_dispatch(Tick)]
 #[derive(Debug, PartialEq, Eq)]
 pub enum Item {
-    Brie(Brie),
-    Backstage(Backstage),
-    Sulfuras(Sulfuras),
-    Ordinary(Ordinary),
+    Brie,
+    Backstage,
+    Sulfuras,
+    Ordinary,
 }
 
 impl Item {
     pub fn new(name: impl AsRef<str>, days_remaining: i32, quality: u32) -> Self {
         match name.as_ref() {
-            "Aged Brie" => Self::Brie(Brie {
+            "Aged Brie" => Brie {
                 days_remaining,
                 quality,
-            }),
-            "Backstage passes to a TAFKAL80ETC concert" => Self::Backstage(Backstage {
+            }
+            .into(),
+            "Backstage passes to a TAFKAL80ETC concert" => Backstage {
                 days_remaining,
                 quality,
-            }),
-            "Sulfuras, Hand of Ragnaros" => Self::Sulfuras(Sulfuras {
+            }
+            .into(),
+            "Sulfuras, Hand of Ragnaros" => Sulfuras {
                 days_remaining,
                 quality,
-            }),
-            _ => Self::Ordinary(Ordinary {
+            }
+            .into(),
+            _ => Ordinary {
                 name: name.as_ref().to_string(),
                 days_remaining,
                 quality,
-            }),
+            }
+            .into(),
         }
     }
 
@@ -153,44 +160,6 @@ impl Item {
         let mut item = Item::new(name, days_remaining, quality);
         item.tick();
         item
-    }
-}
-
-impl Tick for Item {
-    fn tick(&mut self) {
-        match self {
-            Self::Brie(item) => item.tick(),
-            Self::Backstage(item) => item.tick(),
-            Self::Sulfuras(item) => item.tick(),
-            Self::Ordinary(item) => item.tick(),
-        }
-    }
-
-    fn name(&self) -> String {
-        match self {
-            Self::Brie(item) => item.name(),
-            Self::Backstage(item) => item.name(),
-            Self::Sulfuras(item) => item.name(),
-            Self::Ordinary(item) => item.name(),
-        }
-    }
-
-    fn days_remaining(&self) -> i32 {
-        match self {
-            Self::Brie(item) => item.days_remaining(),
-            Self::Backstage(item) => item.days_remaining(),
-            Self::Sulfuras(item) => item.days_remaining(),
-            Self::Ordinary(item) => item.days_remaining(),
-        }
-    }
-
-    fn quality(&self) -> u32 {
-        match self {
-            Self::Brie(item) => item.quality(),
-            Self::Backstage(item) => item.quality(),
-            Self::Sulfuras(item) => item.quality(),
-            Self::Ordinary(item) => item.quality(),
-        }
     }
 }
 

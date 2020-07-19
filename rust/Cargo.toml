@@ -2,3 +2,6 @@
 name = "rust"
 version = "0.1.0"
 authors = ["Michael Gerhaeuser <michael.gerhaeuser@gmail.com>"]
+
+[dependencies]
+enum_dispatch = "0.3"
