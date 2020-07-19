@@ -1,5 +1,3 @@
-extern crate enum_dispatch;
-
 mod gildedrose;
 
 use gildedrose::{GildedRose, Item};
